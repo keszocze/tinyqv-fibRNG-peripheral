@@ -26,83 +26,88 @@ module tqvp_example (
     output [7:0]  data_out      // Data out from the peripheral, set this in accordance with the supplied address
 );
 
-  wire [12:0] result_0;
-  wire [12:0] c$case_alt;
+  wire [13:0] result_0;
+  wire [13:0] c$case_alt;
+  wire [13:0] c$case_alt_0;
   wire [1:0] c$app_arg;
   wire [1:0] result_1;
   wire [0:0] c$parseReadAddress_$j_arg1_case_alt;
   wire [3:0] c$parseReadAddress_$j_arg1_app_arg;
-  wire [12:0] result_2;
-  wire [12:0] c$case_alt_0;
-  wire [12:0] c$case_alt_1;
+  wire [13:0] result_2;
+  wire [13:0] c$case_alt_1;
+  wire [13:0] c$case_alt_2;
   wire [1:0] c$app_arg_0;
-  wire [12:0] c$case_alt_2;
-  wire [12:0] c$case_alt_3;
-  wire [12:0] c$case_alt_4;
+  wire [13:0] c$case_alt_3;
+  wire [13:0] c$case_alt_4;
+  wire [13:0] c$case_alt_5;
+  wire [13:0] c$case_alt_6;
   wire [1:0] result_3;
   wire [0:0] c$parseReadAddress_$j_arg1_case_alt_0;
   wire [3:0] c$parseReadAddress_$j_arg1_app_arg_0;
   reg [73:0] result_4;
-  wire [65:0] result_5;
-  // src/LFSR/Fibonacci.hs:72:1-9
-  reg [31:0] \vec' ;
-  // src/LFSR/Fibonacci.hs:72:1-9
-  wire [1:0] mode1;
-  // src/LFSR/Fibonacci.hs:72:1-9
-  wire signed [63:0] \c$vec'_case_scrut ;
-  // src/LFSR/Fibonacci.hs:72:1-9
-  wire [0:0] addrType;
-  // src/LFSR/Fibonacci.hs:72:1-9
-  wire [31:0] \c$vec'_case_alt ;
-  // src/LFSR/Fibonacci.hs:72:1-9
-  wire [31:0] \c$vec'_case_alt_0 ;
-  // src/LFSR/Fibonacci.hs:72:1-9
-  wire signed [63:0] \c$vec'_app_arg ;
-  // src/LFSR/Fibonacci.hs:72:1-9
-  wire [1:0] addr;
-  // src/LFSR/Fibonacci.hs:116:1-21
-  wire [7:0] word;
-  // src/LFSR/Fibonacci.hs:116:1-21
-  wire [2:0] addr_0;
-  // src/LFSR/Fibonacci.hs:116:1-21
-  wire [65:0] \s' ;
-  reg [7:0] c$case_alt_5;
+  wire [73:0] c$case_alt_7;
+  wire [73:0] c$case_alt_8;
+  reg [7:0] c$case_alt_9;
+  reg [7:0] c$case_alt_10;
+  wire [73:0] c$case_alt_11;
+  reg  c$app_arg_1;
   wire signed [63:0] c$case_scrut;
-  // src/LFSR/Fibonacci.hs:64:1-8
-  wire [0:0] addrType_0;
-  wire [7:0] c$case_alt_6;
-  wire [7:0] c$case_alt_7;
-  wire signed [63:0] c$app_arg_1;
-  // src/LFSR/Fibonacci.hs:64:1-8
-  wire [1:0] addr_1;
-  // src/LFSR/Fibonacci.hs:116:1-21
-  wire [2:0] addr_2;
-  wire [65:0] result_6;
-  // src/LFSR/Fibonacci.hs:(79,1)-(87,20)
+  wire [65:0] result_5;
+  // src/LFSR/Fibonacci.hs:56:1-9
+  reg [31:0] \vec' ;
+  // src/LFSR/Fibonacci.hs:56:1-9
+  wire [1:0] mode1;
+  // src/LFSR/Fibonacci.hs:56:1-9
+  wire signed [63:0] \c$vec'_case_scrut ;
+  // src/LFSR/Fibonacci.hs:56:1-9
+  wire [0:0] addrType;
+  // src/LFSR/Fibonacci.hs:56:1-9
+  wire [31:0] \c$vec'_case_alt ;
+  // src/LFSR/Fibonacci.hs:56:1-9
+  wire [31:0] \c$vec'_case_alt_0 ;
+  // src/LFSR/Fibonacci.hs:56:1-9
+  wire signed [63:0] \c$vec'_app_arg ;
+  // src/LFSR/Fibonacci.hs:56:1-9
+  wire [1:0] addr;
+  // src/LFSR/Fibonacci.hs:97:1-21
+  wire [7:0] word;
+  // src/LFSR/Fibonacci.hs:97:1-21
+  wire [2:0] addr_0;
+  wire [73:0] result_6;
+  wire [65:0] c$executeFibonacciLFSRS_$swriteWord_arg2;
+  reg  c$executeFibonacciLFSRS_$swriteWord_arg2_case_alt;
+  wire signed [63:0] c$executeFibonacciLFSRS_$swriteWord_arg2_case_scrut;
+  // src/LFSR/Fibonacci.hs:(63,1)-(71,20)
   wire [31:0] c$eta1_app_arg;
   wire [31:0] c$app_arg_2;
   wire [31:0] c$app_arg_3;
   wire  c$app_arg_4;
-  wire [65:0] c$case_alt_8;
-  // src/LFSR/Fibonacci.hs:(79,1)-(87,20)
+  wire [65:0] c$case_alt_12;
+  // src/LFSR/Fibonacci.hs:(63,1)-(71,20)
   wire [31:0] eta1;
-  // src/LFSR/Fibonacci.hs:(79,1)-(87,20)
+  // src/LFSR/Fibonacci.hs:(63,1)-(71,20)
   wire [31:0] x;
-  reg  c$app_arg_5;
-  reg  c$app_arg_6;
+  reg [7:0] c$case_alt_13;
   wire signed [63:0] c$case_scrut_0;
-  // src/LFSR/Fibonacci.hs:131:1-131
-  wire [1:0] \mode' ;
-  reg [66:0] c$advance1_tupIn;
-  // src/LFSR/Fibonacci.hs:116:1-21
+  // src/LFSR/Fibonacci.hs:48:1-8
+  wire [0:0] addrType_0;
+  wire [7:0] c$case_alt_14;
+  wire [7:0] c$case_alt_15;
+  wire signed [63:0] c$app_arg_5;
+  // src/LFSR/Fibonacci.hs:48:1-8
+  wire [1:0] addr_1;
+  // src/LFSR/Fibonacci.hs:97:1-21
+  wire [2:0] addr_2;
+  reg [65:0] c$advanceLFSR_arg7;
+  // src/LFSR/Fibonacci.hs:97:1-21
   wire [1:0] mode1_0;
-  // src/LFSR/Fibonacci.hs:116:1-21
+  // src/LFSR/Fibonacci.hs:97:1-21
   wire [31:0] taps1;
-  // src/LFSR/Fibonacci.hs:116:1-21
+  // src/LFSR/Fibonacci.hs:97:1-21
   wire [31:0] eta1_0;
-  // src/LFSR/Fibonacci.hs:168:1-9
-  wire [12:0] x_0;
-  // src/LFSR/Fibonacci.hs:168:1-9
+  // src/LFSR/Fibonacci.hs:166:1-9
+  wire [13:0] x_0;
+  // src/LFSR/Fibonacci.hs:166:1-9
   reg [65:0] x1 = {(((({1'b1,   1'b1,   1'b1,   1'b1,   1'b1,   1'b1,   1'b1,   1'b1,   1'b1,   1'b1,
  1'b1,   1'b1,   1'b1,   1'b1,   1'b1,   1'b1,   1'b1,   1'b1,   1'b1,   1'b1,
  1'b1,   1'b1,   1'b1,   1'b1,   1'b1,   1'b1,   1'b1,   1'b1,   1'b1,   1'b1,
@@ -111,21 +116,26 @@ module tqvp_example (
  1'b0,   1'b0,   1'b0,   1'b0,   1'b0,   1'b0,   1'b0,   1'b0,   1'b0,   1'b0,
  1'b0,   1'b1,   1'b0,   1'b0,   1'b0,   1'b0,   1'b0,   1'b0,   1'b0,   1'b0,
  1'b0,   1'b1})))),   2'd0};
+  wire [1:0] c$case_alt_selection_11;
+  wire [1:0] c$case_alt_selection_14;
   wire [31:0] c$vec;
   wire [31:0] c$vec_0;
-  wire [31:0] c$vecFlat;
-  wire [31:0] c$vecFlat_0;
+  wire [1:0] c$dtt_rhs_1;
   wire [31:0] c$vec_1;
   wire [31:0] c$vec_2;
   wire [31:0] c$vec2;
   wire [32:0] x_projection;
+  wire [31:0] c$vecFlat;
+  wire [31:0] c$vecFlat_0;
   wire [15:0] result;
 
-  assign result_0 = (c$parseReadAddress_$j_arg1_app_arg == 4'b0100) ? {2'b00,{1'd1,
-                                                                              c$app_arg},8'bxxxxxxxx} : c$case_alt;
+  assign result_0 = (c$parseReadAddress_$j_arg1_app_arg == 4'b0100) ? {3'b000,{1'd1,
+                                                                               c$app_arg},8'bxxxxxxxx} : c$case_alt;
 
-  assign c$case_alt = (c$parseReadAddress_$j_arg1_app_arg == 4'b0000) ? {2'b00,{1'd0,
-                                                                                c$app_arg},8'bxxxxxxxx} : {2'b11,11'bxxxxxxxxxxx};
+  assign c$case_alt = (c$parseReadAddress_$j_arg1_app_arg == 4'b0000) ? {3'b000,{1'd0,
+                                                                                 c$app_arg},8'bxxxxxxxx} : c$case_alt_0;
+
+  assign c$case_alt_0 = (address == 4'b1111) ? {3'b100,11'bxxxxxxxxxxx} : {3'b101,11'bxxxxxxxxxxx};
 
   assign c$app_arg = (result_1);
 
@@ -133,23 +143,25 @@ module tqvp_example (
 
   assign c$parseReadAddress_$j_arg1_case_alt = ((address[(64'sd0)]) == (1'b1)) ? 1'b1 : 1'b0;
 
-  assign c$parseReadAddress_$j_arg1_app_arg = 4'b0100 & address;
+  assign c$parseReadAddress_$j_arg1_app_arg = 4'b1100 & address;
 
-  assign result_2 = (c$parseReadAddress_$j_arg1_app_arg_0 == 4'b0100) ? {2'b01,{1'd1,
-                                                                                c$app_arg_0},data_in} : c$case_alt_0;
+  assign result_2 = (c$parseReadAddress_$j_arg1_app_arg_0 == 4'b0100) ? {3'b001,{1'd1,
+                                                                                 c$app_arg_0},data_in} : c$case_alt_1;
 
-  assign c$case_alt_0 = (c$parseReadAddress_$j_arg1_app_arg_0 == 4'b0000) ? {2'b01,{1'd0,
-                                                                                    c$app_arg_0},data_in} : c$case_alt_1;
+  assign c$case_alt_1 = (c$parseReadAddress_$j_arg1_app_arg_0 == 4'b0000) ? {3'b001,{1'd0,
+                                                                                     c$app_arg_0},data_in} : c$case_alt_2;
 
-  assign c$case_alt_1 = ((4'b1000 & address) == 4'b1000) ? c$case_alt_2 : ({13 {1'bx}});
+  assign c$case_alt_2 = ((4'b1000 & address) == 4'b1000) ? c$case_alt_3 : ({14 {1'bx}});
 
   assign c$app_arg_0 = (result_3);
 
-  assign c$case_alt_2 = (data_in == 8'b00000000) ? {2'b10,2'd0,9'bxxxxxxxxx} : c$case_alt_3;
+  assign c$case_alt_3 = (data_in == 8'b00000000) ? {3'b010,2'd0,9'bxxxxxxxxx} : c$case_alt_4;
 
-  assign c$case_alt_3 = (data_in == 8'b00000001) ? {2'b10,2'd1,9'bxxxxxxxxx} : c$case_alt_4;
+  assign c$case_alt_4 = (data_in == 8'b00000001) ? {3'b010,2'd1,9'bxxxxxxxxx} : c$case_alt_5;
 
-  assign c$case_alt_4 = (data_in == 8'b00000010) ? {2'b10,2'd2,9'bxxxxxxxxx} : {2'b11,11'bxxxxxxxxxxx};
+  assign c$case_alt_5 = (data_in == 8'b00000010) ? {3'b010,2'd2,9'bxxxxxxxxx} : c$case_alt_6;
+
+  assign c$case_alt_6 = (data_in == 8'b00000011) ? {3'b011,11'bxxxxxxxxxxx} : {3'b101,11'bxxxxxxxxxxx};
 
   assign result_3 = ((address[(64'sd1)]) == (1'b1)) ? ({1'b1,c$parseReadAddress_$j_arg1_case_alt_0}) : ({1'b0,c$parseReadAddress_$j_arg1_case_alt_0});
 
@@ -158,16 +170,59 @@ module tqvp_example (
   assign c$parseReadAddress_$j_arg1_app_arg_0 = 4'b1100 & address;
 
   always @(*) begin
-    case(x_0[12:11])
-      2'b00 : result_4 = {c$case_alt_5,   \s' };
-      2'b01 : result_4 = {8'b00000000,   result_5};
-      2'b10 : result_4 = {8'b00000000,   \s' };
-      default : result_4 = {74 {1'bx}};
+    case(x_0[13:11])
+      3'b000 : result_4 = result_6;
+      3'b001 : result_4 = {8'b00000000,   result_5};
+      3'b010 : result_4 = c$case_alt_11;
+      3'b011 : result_4 = {8'b00000000,
+                           c$case_alt_12};
+      3'b100 : result_4 = c$case_alt_8;
+      default : result_4 = c$case_alt_7;
     endcase
   end
 
-  assign result_5 = addrType ? {\s' [65:34],
-                                \vec' ,   mode1} : {\vec' ,   \s' [33:2],
+  assign c$case_alt_7 = c$executeFibonacciLFSRS_$swriteWord_arg2_case_alt ? {8'b00000000,
+                                                                             c$case_alt_12} : {8'b00000000,   x1};
+
+  assign c$case_alt_8 = c$executeFibonacciLFSRS_$swriteWord_arg2_case_alt ? {c$case_alt_9,
+                                                                             c$case_alt_12} : {c$case_alt_10,   x1};
+
+  assign c$case_alt_selection_11 = c$case_alt_12[1:0];
+
+  always @(*) begin
+    case(c$case_alt_selection_11)
+      2'b00 : c$case_alt_9 = 8'b00000000;
+      2'b01 : c$case_alt_9 = 8'b00000001;
+      default : c$case_alt_9 = 8'b00000010;
+    endcase
+  end
+
+  assign c$case_alt_selection_14 = x1[1:0];
+
+  always @(*) begin
+    case(c$case_alt_selection_14)
+      2'b00 : c$case_alt_10 = 8'b00000000;
+      2'b01 : c$case_alt_10 = 8'b00000001;
+      default : c$case_alt_10 = 8'b00000010;
+    endcase
+  end
+
+  assign c$case_alt_11 = c$app_arg_1 ? {8'b00000000,
+                                        c$case_alt_12} : {8'b00000000,   {eta1_0,
+                                                                          taps1,   mode1_0}};
+
+  always @(*) begin
+    case(c$case_scrut)
+      64'sd1 : c$app_arg_1 = 1'b1;
+      default : c$app_arg_1 = 1'b0;
+    endcase
+  end
+
+  assign c$case_scrut = $unsigned(mode1_0);
+
+  assign result_5 = addrType ? {c$executeFibonacciLFSRS_$swriteWord_arg2[65:34],
+                                \vec' ,   mode1} : {\vec' ,
+                                                    c$executeFibonacciLFSRS_$swriteWord_arg2[33:2],
                                                     mode1};
 
   always @(*) begin
@@ -177,13 +232,13 @@ module tqvp_example (
     endcase
   end
 
-  assign mode1 = \s' [1:0];
+  assign mode1 = c$executeFibonacciLFSRS_$swriteWord_arg2[1:0];
 
   assign \c$vec'_case_scrut  = $unsigned(addrType);
 
   assign addrType = addr_0[2:2];
 
-  assign c$vec = \s' [65:34];
+  assign c$vec = c$executeFibonacciLFSRS_$swriteWord_arg2[65:34];
 
   // vector replace begin
   genvar i;
@@ -194,7 +249,7 @@ module tqvp_example (
   endgenerate
   // vector replace end
 
-  assign c$vec_0 = \s' [33:2];
+  assign c$vec_0 = c$executeFibonacciLFSRS_$swriteWord_arg2[33:2];
 
   // vector replace begin
   genvar i_0;
@@ -213,83 +268,52 @@ module tqvp_example (
 
   assign addr_0 = x_0[10:8];
 
-  assign \s'  = result_6;
+  assign result_6 = c$executeFibonacciLFSRS_$swriteWord_arg2_case_alt ? {c$case_alt_13,
+                                                                         c$case_alt_12} : {c$case_alt_13,   x1};
+
+  assign c$executeFibonacciLFSRS_$swriteWord_arg2 = c$executeFibonacciLFSRS_$swriteWord_arg2_case_alt ? c$case_alt_12 : x1;
 
   always @(*) begin
-    case(c$case_scrut)
-      64'sd0 : c$case_alt_5 = c$case_alt_6;
-      default : c$case_alt_5 = c$case_alt_7;
+    case(c$executeFibonacciLFSRS_$swriteWord_arg2_case_scrut)
+      64'sd1 : c$executeFibonacciLFSRS_$swriteWord_arg2_case_alt = 1'b1;
+      default : c$executeFibonacciLFSRS_$swriteWord_arg2_case_alt = 1'b0;
     endcase
   end
 
-  assign c$case_scrut = $unsigned(addrType_0);
+  assign c$dtt_rhs_1 = x1[1:0];
 
-  assign addrType_0 = addr_2[2:2];
+  assign c$executeFibonacciLFSRS_$swriteWord_arg2_case_scrut = $unsigned(c$dtt_rhs_1);
 
-  assign c$vecFlat = x1[65:34];
-
-  // index begin
-  wire [7:0] vecArray [0:4-1];
-  genvar i_1;
-  generate
-  for (i_1=0; i_1 < 4; i_1=i_1+1) begin : mk_array
-    assign vecArray[(4-1)-i_1] = c$vecFlat[i_1*8+:8];
-  end
-  endgenerate
-  assign c$case_alt_6 = vecArray[c$app_arg_1];
-  // index end
-
-  assign c$vecFlat_0 = x1[33:2];
-
-  // index begin
-  wire [7:0] vecArray_0 [0:4-1];
-  genvar i_2;
-  generate
-  for (i_2=0; i_2 < 4; i_2=i_2+1) begin : mk_array_0
-    assign vecArray_0[(4-1)-i_2] = c$vecFlat_0[i_2*8+:8];
-  end
-  endgenerate
-  assign c$case_alt_7 = vecArray_0[c$app_arg_1];
-  // index end
-
-  assign c$app_arg_1 = $unsigned({{(64-2) {1'b0}},addr_1});
-
-  assign addr_1 = addr_2[1:0];
-
-  assign addr_2 = x_0[10:8];
-
-  assign result_6 = (c$app_arg_6 | (c$app_arg_5 & c$advance1_tupIn[66:66])) ? c$case_alt_8 : c$advance1_tupIn[65:0];
-
-  assign c$vec_1 = c$advance1_tupIn[65:34];
+  assign c$vec_1 = c$advanceLFSR_arg7[65:34];
 
   // map begin
-  genvar i_3;
+  genvar i_1;
   generate
-  for (i_3=0; i_3 < 4; i_3 = i_3 + 1) begin : map
+  for (i_1=0; i_1 < 4; i_1 = i_1 + 1) begin : map
     wire [7:0] map_in;
-    assign map_in = c$vec_1[i_3*8+:8];
+    assign map_in = c$vec_1[i_1*8+:8];
     wire [7:0] map_out;
     assign map_out = map_in;
 
 
-    assign c$eta1_app_arg[i_3*8+:8] = map_out;
+    assign c$eta1_app_arg[i_1*8+:8] = map_out;
   end
   endgenerate
   // map end
 
-  assign c$vec_2 = c$advance1_tupIn[33:2];
+  assign c$vec_2 = c$advanceLFSR_arg7[33:2];
 
   // map begin
-  genvar i_4;
+  genvar i_2;
   generate
-  for (i_4=0; i_4 < 4; i_4 = i_4 + 1) begin : map_0
+  for (i_2=0; i_2 < 4; i_2 = i_2 + 1) begin : map_0
     wire [7:0] map_in_0;
-    assign map_in_0 = c$vec_2[i_4*8+:8];
+    assign map_in_0 = c$vec_2[i_2*8+:8];
     wire [7:0] map_out_0;
     assign map_out_0 = map_in_0;
 
 
-    assign c$app_arg_2[i_4*8+:8] = map_out_0;
+    assign c$app_arg_2[i_2*8+:8] = map_out_0;
   end
   endgenerate
   // map end
@@ -297,18 +321,18 @@ module tqvp_example (
   assign c$vec2 = ((((c$app_arg_2))));
 
   // zipWith start
-  genvar i_5;
+  genvar i_3;
   generate
-  for (i_5 = 0; i_5 < 32; i_5 = i_5 + 1) begin : zipWith
+  for (i_3 = 0; i_3 < 32; i_3 = i_3 + 1) begin : zipWith
     wire  zipWith_in1;
-    assign zipWith_in1 = eta1[i_5*1+:1];
+    assign zipWith_in1 = eta1[i_3*1+:1];
     wire  zipWith_in2;
-    assign zipWith_in2 = c$vec2[i_5*1+:1];
+    assign zipWith_in2 = c$vec2[i_3*1+:1];
     wire  c$n;
     assign c$n = zipWith_in1 & zipWith_in2;
 
 
-    assign c$app_arg_3[i_5*1+:1] = c$n;
+    assign c$app_arg_3[i_3*1+:1] = c$n;
   end
   endgenerate
   // zipWith end
@@ -571,9 +595,9 @@ module tqvp_example (
 
 
 
-  assign c$case_alt_8 = {((((x)))),
-                         c$advance1_tupIn[33:2],
-                         c$advance1_tupIn[1:0]};
+  assign c$case_alt_12 = {((((x)))),
+                          c$advanceLFSR_arg7[33:2],
+                          c$advanceLFSR_arg7[1:0]};
 
   assign eta1 = (((c$eta1_app_arg)));
 
@@ -583,28 +607,56 @@ module tqvp_example (
 
   always @(*) begin
     case(c$case_scrut_0)
-      64'sd2 : c$app_arg_5 = 1'b1;
-      default : c$app_arg_5 = 1'b0;
+      64'sd0 : c$case_alt_13 = c$case_alt_14;
+      default : c$case_alt_13 = c$case_alt_15;
     endcase
   end
 
-  always @(*) begin
-    case(c$case_scrut_0)
-      64'sd1 : c$app_arg_6 = 1'b1;
-      default : c$app_arg_6 = 1'b0;
-    endcase
+  assign c$case_scrut_0 = $unsigned(addrType_0);
+
+  assign addrType_0 = addr_2[2:2];
+
+  assign c$vecFlat = x1[65:34];
+
+  // index begin
+  wire [7:0] vecArray [0:4-1];
+  genvar i_4;
+  generate
+  for (i_4=0; i_4 < 4; i_4=i_4+1) begin : mk_array
+    assign vecArray[(4-1)-i_4] = c$vecFlat[i_4*8+:8];
   end
+  endgenerate
+  assign c$case_alt_14 = vecArray[c$app_arg_5];
+  // index end
 
-  assign c$case_scrut_0 = $unsigned(\mode' );
+  assign c$vecFlat_0 = x1[33:2];
 
-  assign \mode'  = c$advance1_tupIn[1:0];
+  // index begin
+  wire [7:0] vecArray_0 [0:4-1];
+  genvar i_5;
+  generate
+  for (i_5=0; i_5 < 4; i_5=i_5+1) begin : mk_array_0
+    assign vecArray_0[(4-1)-i_5] = c$vecFlat_0[i_5*8+:8];
+  end
+  endgenerate
+  assign c$case_alt_15 = vecArray_0[c$app_arg_5];
+  // index end
+
+  assign c$app_arg_5 = $unsigned({{(64-2) {1'b0}},addr_1});
+
+  assign addr_1 = addr_2[1:0];
+
+  assign addr_2 = x_0[10:8];
 
   always @(*) begin
-    case(x_0[12:11])
-      2'b00 : c$advance1_tupIn = {1'b1,   x1};
-      2'b01 : c$advance1_tupIn = {1'b0,   x1};
-      default : c$advance1_tupIn = {1'b0,   {eta1_0,
-                                             taps1,   mode1_0}};
+    case(x_0[13:11])
+      3'b000 : c$advanceLFSR_arg7 = x1;
+      3'b001 : c$advanceLFSR_arg7 = x1;
+      3'b010 : c$advanceLFSR_arg7 = {eta1_0,   taps1,
+                                     mode1_0};
+      3'b011 : c$advanceLFSR_arg7 = x1;
+      3'b100 : c$advanceLFSR_arg7 = x1;
+      default : c$advanceLFSR_arg7 = x1;
     endcase
   end
 

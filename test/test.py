@@ -10,13 +10,13 @@ from tqv import TinyQV
 
 clkCounter = 0
 
-CMD_ADDR = 8
+ADDR_CMD = 8
+ADDR_MODE = 15
 MODE_STOP = 0
-MODE_ADVANCE_CLOCK = 1
-MODE_ADVANCE_READ = 2
-MODE_ADVANCE_EXPLICIT = 3
-CMD_ADVANCE = 4
-CMD_NOP = 5 # actually any value >= 5
+MODE_RUNNING = 1
+MODE_EXPLICIT = 2
+CMD_ADVANCE = 3
+CMD_NOP = 4 # actually any value >= 4
 
 LFSR1 = 0
 LFSR2 = 1
@@ -42,28 +42,25 @@ async def myTick(dut, n=1):
     clkCounter += n
 
 async def stop(tqv):
-   await tqv.write_reg(CMD_ADDR, MODE_STOP)
+   await tqv.write_reg(ADDR_CMD, MODE_STOP)
 
-async def advanceClock(tqv):
-    await tqv.write_reg(CMD_ADDR, MODE_ADVANCE_CLOCK)
+async def set_running(tqv):
+    await tqv.write_reg(ADDR_CMD, MODE_RUNNING)
 
-async def advanceRead(tqv):
-    await tqv.write_reg(CMD_ADDR, MODE_ADVANCE_READ)
-
-async def advanceExplicit(tqv):
-    await tqv.write_reg(CMD_ADDR, MODE_ADVANCE_EXPLICIT)
+async def set_explicit(tqv):
+    await tqv.write_reg(ADDR_CMD, MODE_EXPLICIT)
 
 async def advance(tqv):
-    await tqv.write_reg(CMD_ADDR, CMD_ADVANCE)    
+    await tqv.write_reg(ADDR_CMD, CMD_ADVANCE)    
 
 # TODO erlauben, den aktuellen Modus auszulesen
 
 # # Assume a stopped RNG before calling
 async def readLFSR(tqv):
-    lfsr0 = await tqv.read_reg(0)
-    lfsr1 = await tqv.read_reg(1)
-    lfsr2 = await tqv.read_reg(2)
-    lfsr3 = await tqv.read_reg(3)
+    lfsr0 = await tqv.read_reg(LFSR1)
+    lfsr1 = await tqv.read_reg(LFSR2)
+    lfsr2 = await tqv.read_reg(LFSR3)
+    lfsr3 = await tqv.read_reg(LFSR4)
 
     return [lfsr0,lfsr1,lfsr2,lfsr3]
 
@@ -76,18 +73,39 @@ async def readTaps(tqv):
 
     return [tap0,tap1,tap2,tap3]
 
+async def readMode(tqv):
+    mode = await tqv.read_reg(9)
+
+    print(f"mode: {mode} ({myBin(mode,8)})")
+
+    match mode:
+        case 0: return "Stopped"
+        case 1: return "Running"
+        case 2: return "Explicit"
+
+
 def printWords(w):
     print(f"<{myBin(w[0],8)} {myBin(w[1],8)} {myBin(w[2],8)} {myBin(w[3],8)}>")
 
 # Assume a stopped RNG with given values
 async def stoppedIsFixed(dut,tqv,vals):
-    for n in range(10):
+    for n in range(ADDR_MODE):
         await myTick(dut,n)
         lfsr = await readLFSR(tqv)
-        assert lfsr[0] == vals[0]
-        assert lfsr[1] == vals[1]
-        assert lfsr[2] == vals[2]
-        assert lfsr[3] == vals[3]
+        assert lfsr == vals
+
+async def check_initial_state(dut,tqv):
+    m = await readMode(tqv)
+    assert m == "Stopped"
+    await myTick(dut,4)
+
+    lfsr = await readLFSR(tqv)
+    assert lfsr == [255,255,255,255]
+
+    taps = await readTaps(tqv)
+    assert taps == [192,0,4,1]
+
+    
 
 # When submitting your design, change this to 16 + the peripheral number
 # in peripherals.v.  e.g. if your design is i_user_simple00, set this to 16.
@@ -112,38 +130,43 @@ async def test_project(dut):
     # Reset, always start the test by resetting TinyQV
     await tqv.reset()
 
+    await myTick(dut,10)
+
     dut._log.info("Test Fibonacci RNG behavior")
 
-    dut._log.info("A stopped RNG should always produce the same values")
+    dut._log.info("The initial state is as expected")
+
+    await check_initial_state(dut,tqv)
+
+
+    # await stop(tqv)
+    # await readMode(tqv)
+    # await set_explicit(tqv)
+    # await readMode(tqv)
+
+
+    # dut._log.info("A stopped RNG should always produce the same values")
 
     
-    await stoppedIsFixed(dut,tqv,[255,255,255,255])
+    # await stoppedIsFixed(dut,tqv,[255,255,255,255])
 
-    await myTick(dut,4)
-    await stoppedIsFixed(dut,tqv,[255,255,255,255])
+    # await myTick(dut,4)
+    # await stoppedIsFixed(dut,tqv,[255,255,255,255])
 
-    # Explcitly advance once -> produziert fehler, wieso auch immer
-    #await advanceExplicit(tqv)
-    #await advance(tqv)
+    # # Explcitly advance once -> produziert fehler, wieso auch immer
+    # #await set_explicit(tqv)
+    # #await advance(tqv)
 
-    w = await readLFSR(tqv)
-    printWords(w)
-    await advanceRead(tqv)
-    await tqv.read_reg(0)
-    await stop(tqv)
-    w = await readLFSR(tqv)
-    printWords(w)
-
-    # # Let it tick for some time and then stop it again
-    await advanceClock(tqv)
-    await myTick(dut,23)
-    await stop(tqv)
+    # # # Let it tick for some time and then stop it again
+    # await set_running(tqv)
+    # await myTick(dut,23)
+    # await stop(tqv)
 
 
-    w = await readLFSR(tqv)
-    printWords(w)
-    await stoppedIsFixed(dut,tqv,w)
+    # w = await readLFSR(tqv)
+    # printWords(w)
+    # await stoppedIsFixed(dut,tqv,w)
 
-    await myTick(dut,3)
+    # await myTick(dut,3)
 
 
