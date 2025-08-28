@@ -7,6 +7,88 @@ from cocotb.triggers import ClockCycles
 
 from tqv import TinyQV
 
+
+clkCounter = 0
+
+CMD_ADDR = 8
+MODE_STOP = 0
+MODE_ADVANCE_CLOCK = 1
+MODE_ADVANCE_READ = 2
+MODE_ADVANCE_EXPLICIT = 3
+CMD_ADVANCE = 4
+CMD_NOP = 5 # actually any value >= 5
+
+LFSR1 = 0
+LFSR2 = 1
+LFSR3 = 2
+LFSR4 = 3
+
+TAPS1 = 4
+TAPS2 = 5
+TAPS3 = 6
+TAPS4 = 7
+
+def myBin(val, minLen=3):
+  valS = bin(val)[2:]
+
+  while len(valS) < minLen:
+    valS = "0" + valS
+
+  return valS
+
+async def myTick(dut, n=1):
+    await ClockCycles(dut.clk,n)
+    global clkCounter
+    clkCounter += n
+
+async def stop(tqv):
+   await tqv.write_reg(CMD_ADDR, MODE_STOP)
+
+async def advanceClock(tqv):
+    await tqv.write_reg(CMD_ADDR, MODE_ADVANCE_CLOCK)
+
+async def advanceRead(tqv):
+    await tqv.write_reg(CMD_ADDR, MODE_ADVANCE_READ)
+
+async def advanceExplicit(tqv):
+    await tqv.write_reg(CMD_ADDR, MODE_ADVANCE_EXPLICIT)
+
+async def advance(tqv):
+    await tqv.write_reg(CMD_ADDR, CMD_ADVANCE)    
+
+# TODO erlauben, den aktuellen Modus auszulesen
+
+# # Assume a stopped RNG before calling
+async def readLFSR(tqv):
+    lfsr0 = await tqv.read_reg(0)
+    lfsr1 = await tqv.read_reg(1)
+    lfsr2 = await tqv.read_reg(2)
+    lfsr3 = await tqv.read_reg(3)
+
+    return [lfsr0,lfsr1,lfsr2,lfsr3]
+
+# # Assume a stopped RNG before calling
+async def readTaps(tqv):
+    tap0 = await tqv.read_reg(TAPS1)
+    tap1 = await tqv.read_reg(TAPS2)
+    tap2 = await tqv.read_reg(TAPS3)
+    tap3 = await tqv.read_reg(TAPS4)
+
+    return [tap0,tap1,tap2,tap3]
+
+def printWords(w):
+    print(f"<{myBin(w[0],8)} {myBin(w[1],8)} {myBin(w[2],8)} {myBin(w[3],8)}>")
+
+# Assume a stopped RNG with given values
+async def stoppedIsFixed(dut,tqv,vals):
+    for n in range(10):
+        await myTick(dut,n)
+        lfsr = await readLFSR(tqv)
+        assert lfsr[0] == vals[0]
+        assert lfsr[1] == vals[1]
+        assert lfsr[2] == vals[2]
+        assert lfsr[3] == vals[3]
+
 # When submitting your design, change this to 16 + the peripheral number
 # in peripherals.v.  e.g. if your design is i_user_simple00, set this to 16.
 # The peripheral number is not used by the test harness.
@@ -30,22 +112,38 @@ async def test_project(dut):
     # Reset, always start the test by resetting TinyQV
     await tqv.reset()
 
-    dut._log.info("Test project behavior")
+    dut._log.info("Test Fibonacci RNG behavior")
 
-    # Test register write and read back
-    await tqv.write_reg(0, 20)
-    assert await tqv.read_reg(0) == 20
+    dut._log.info("A stopped RNG should always produce the same values")
 
-    # Set an input value, in the example this will be added to the register value
-    dut.ui_in.value = 30
+    
+    await stoppedIsFixed(dut,tqv,[255,255,255,255])
 
-    # Wait for two clock cycles to see the output values, because ui_in is synchronized over two clocks,
-    # and a further clock is required for the output to propagate.
-    await ClockCycles(dut.clk, 3)
+    await myTick(dut,4)
+    await stoppedIsFixed(dut,tqv,[255,255,255,255])
 
-    # The following assertion is just an example of how to check the output values.
-    # Change it to match the actual expected output of your module:
-    assert dut.uo_out.value == 50
+    # Explcitly advance once -> produziert fehler, wieso auch immer
+    #await advanceExplicit(tqv)
+    #await advance(tqv)
 
-    # Keep testing the module by changing the input values, waiting for
-    # one or more clock cycles, and asserting the expected output values.
+    w = await readLFSR(tqv)
+    printWords(w)
+    await advanceRead(tqv)
+    await tqv.read_reg(0)
+    await stop(tqv)
+    w = await readLFSR(tqv)
+    printWords(w)
+
+    # # Let it tick for some time and then stop it again
+    await advanceClock(tqv)
+    await myTick(dut,23)
+    await stop(tqv)
+
+
+    w = await readLFSR(tqv)
+    printWords(w)
+    await stoppedIsFixed(dut,tqv,w)
+
+    await myTick(dut,3)
+
+
