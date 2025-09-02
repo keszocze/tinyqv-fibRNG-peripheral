@@ -87,17 +87,17 @@ async def test_project(dut):
     # Fibonaccy LFSR sent to TTQV, the count starts from the right.
     # As we have a fixes word size of 8, padding bits (zeros) have been added to the right (indicated by
     # parantheses).
-    # await check_full_cycle(dut, tqv, 2, 192) # 11(000000)
-    # await check_full_cycle(dut, tqv, 3, 96) # 011(00000)
+    await check_full_cycle(dut, tqv, 2, 192) # 11(000000)
+    await check_full_cycle(dut, tqv, 3, 96) # 011(00000)
     await check_full_cycle(dut, tqv, 4, 48) # 0011(0000)
-    # await check_full_cycle(dut, tqv, 5, 40) # 00101(000)
-    # await check_full_cycle(dut, tqv, 6, 12) # 000011(00)
-    # await check_full_cycle(dut, tqv, 7, 6) # 0000011(0)
-    # await check_full_cycle(dut, tqv, 8, 29) # 00011101
+    await check_full_cycle(dut, tqv, 5, 40) # 00101(000)
+    await check_full_cycle(dut, tqv, 6, 12) # 000011(00)
+    await check_full_cycle(dut, tqv, 7, 6) # 0000011(0)
+    await check_full_cycle(dut, tqv, 8, 29) # 00011101
 
     # Resetting the design should yield the initial state back
-    # await tqv.reset()
-    # await check_initial_state(dut,tqv)
+    await tqv.reset()
+    await check_initial_state(dut,tqv)
 
     await how_to_test_example(tqv)
 
