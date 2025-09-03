@@ -188,9 +188,6 @@ The following cocotb code configures *FibRNG* to use a $3$-bit Fibonacci LFSR ha
         # extract the upper bits
         v = f"{val:=08b}"[0:4]
         print(f"{i:=2}: {v})
-
-    # das hier war falsch
-    print(bin(val & int('11110000',2)))
 ```
 
 ## External hardware
