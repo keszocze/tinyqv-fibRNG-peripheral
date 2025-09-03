@@ -43,9 +43,16 @@ Generating bit-vectors $r$ as described above is necessarily cyclic, i.e. after 
 
 When using an LFSR one usually aims of obtaining sequences of maximal length (named *Maximum Length Sequences* (MLS), see [Wikipedia](https://en.wikipedia.org/wiki/Maximum_length_sequence)) as this yields most random numbers given a specific configuration of the LFSR. 
 
-There are lists of known taps that, for a bit-vector of length $n$ will yield a MLS of length $2^n-1$. The bit-vector $r=\langle 0 \ldots 0 \rangle$ must not occur as it will only ever generate a new random bit $b$ of value $0$, i.e., the number generation is stuck. Wikipedia has a list of taps for up to $n$ bits [here](https://en.wikipedia.org/wiki/Linear-feedback_shift_register#Example_polynomials_for_maximal_LFSRs9) and a [Xilinx Application Note](http://www.xilinx.com/support/documentation/application_notes/xapp052.pdf) provides taps for up to $168$ bits 
+There are lists of known taps that, for a bit-vector of length $n$ will yield a MLS of length $2^n-1$. The bit-vector $r=\langle 0 \ldots 0 \rangle$ must not occur as it will only ever generate a new random bit $b$ of value $0$, i.e., the number generation is stuck. Wikipedia has a list of taps for up to $n$ bits [here](https://en.wikipedia.org/wiki/Linear-feedback_shift_register#Example_polynomials_for_maximal_LFSRs9) and a [Xilinx Application Note](http://www.xilinx.com/support/documentation/application_notes/xapp052.pdf) provides taps for up to $168$ bits.
 
 
+*FibRNG* is initially configured to produce a MLS for $32$ bits, i.e., the registers are set to
+$$
+\begin{aligned}
+r &= \langle 11111111 ~~ 11111111 ~~ 11111111 ~~ 11111111\rangle ~ \text{and}\\
+t &= \langle 11000000 ~~ 00000000 ~~ 00000100 ~~ 00000001\rangle.
+\end{aligned}
+$$
 
 
 ## How it is implemented
@@ -69,13 +76,13 @@ $$
 Reading the new random bit (i.e., $r_{32}$) is done as follows using cocotb (it should be straight-forward to translate this to a `C++` program):
 
 ```python
-    # Get the last (i.e., fourth) word
-    # (see the 'Register Map' section of the documentation for details)
-    fibReg4 = await tqv.read_reg(FIBREG4)
+# Get the last (i.e., fourth) word
+# (see the 'Register Map' section of the documentation for details)
+fibReg4 = await tqv.read_reg(FIBREG4)
 
-    # AND'ing with the lowest bit to extract the new random bit r_32
-    # (the last bit in the last word)
-    randomBit = fibReg4 & 1
+# AND'ing with the lowest bit to extract the new random bit r_32
+# (the last bit in the last word)
+randomBit = fibReg4 & 1
 ```
 
 Furhtermore, FibRNG can be in one of the following modes of operation: 
@@ -116,19 +123,19 @@ To configure either the shift register $r$ or the taps $t$, set the operation mo
 As an example, we configure `FibgRNG` to be used as the RNG shown in Figure 1, i.e., $n=16$, $r=\langle 10101100 ~ 11100001 \rangle$ and $t=\langle 10000000 ~ 00101101\rangle$. The following [cocotb code]() 
 
 ```python
-    await tqv.write_reg(CMD_REG, CMD_STOP)
+await tqv.write_reg(CMD_REG, CMD_STOP)
 
-    await tqv.write_reg(FIBREG1, int('10101100',2))
-    await tqv.write_reg(FIBREG2, int('11100001',2))
-    # FibReg3 and FibReg4 do not need to be set to zero
+await tqv.write_reg(FIBREG1, int('10101100',2))
+await tqv.write_reg(FIBREG2, int('11100001',2))
+# FibReg3 and FibReg4 do not need to be set to zero
 
-    await tqv.write_reg(TAPS1, int('10000000',2))
-    await tqv.write_reg(TAPS2, int('00101101',2))
-    # you *need* to clear the upper tap bits!
-    await tqv.write_reg(TAPS3, 0)
-    await tqv.write_reg(TAPS4, 0)
+await tqv.write_reg(TAPS1, int('10000000',2))
+await tqv.write_reg(TAPS2, int('00101101',2))
+# you *need* to clear the upper tap bits!
+await tqv.write_reg(TAPS3, 0)
+await tqv.write_reg(TAPS4, 0)
 
-    await tqv.write_reg(CMD_REG, CMD_EXPLICIT)
+await tqv.write_reg(CMD_REG, CMD_EXPLICIT)
 ```
 
 It is important to set `TAPS3` and `TAPS4` to $\langle 0000000\rangle$ as *FibRNG* will 
@@ -169,27 +176,33 @@ Reading from any address not specified in the table below will return the word `
 The following cocotb code configures *FibRNG* to use a $3$-bit Fibonacci LFSR having the maximum length sequence of $2^3-1=7$.
 
 ```python
+await tqv.write_reg(CMD_REG, CMD_STOP)
 
-    await tqv.write_reg(ADDR_CMD, CMD_STOP)
+await tqv.write_reg(FIBREG1, int('11100000',2))
+# FibReg2, FibReg3 and FibReg4 do not need to be set to zero
+# but we do it "to be safe" anyways
+await tqv.write_reg(FIBREG2, 0)
+await tqv.write_reg(FIBREG3, 0)
+await tqv.write_reg(FIBREG4, 0)
 
-    await tqv.write_reg(FIBREG1, int('11110000',2))
-    # FibReg2, FibReg3 and FibReg4 do not need to be set to zero
+await tqv.write_reg(TAPS1, int('01100000',2)) 
+# you *need* to clear the upper tap bits!
+await tqv.write_reg(TAPS2, 0)
+await tqv.write_reg(TAPS3, 0)
+await tqv.write_reg(TAPS3, 0)
 
-    await tqv.write_reg(TAPS1, int('01100000',2))
-    # you *need* to clear the upper tap bits!
-    await tqv.write_reg(TAPS2, 0)
-    await tqv.write_reg(TAPS3, 0)
-    await tqv.write_reg(TAPS4, 0)
+await tqv.write_reg(CMD_REG, MODE_EXPLICIT)
 
-    await tqv.write_reg(CMD_REG, CMD_EXPLICIT)
+
+for i in range(8):
+    # get current state of the RNG
+    val = await tqv.read_reg(FIBREG1)
+
+    # extract and print the upper bits
+    v = f"{val:=08b}"[0:3]
+    print(f"{i}: r=<{v}> b={v[-1]}")
 
     await tqv.write_reg(CMD_REG, CMD_ADVANCE)
-    for i in range(8):
-        await val = tqv.read_reg(FibReg1)
-
-        # extract the upper bits
-        v = f"{val:=08b}"[0:4]
-        print(f"{i:=2}: {v})
 ```
 
 ## External hardware
