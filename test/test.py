@@ -97,7 +97,7 @@ async def test_project(dut):
 
     await check_non_full_cycle(dut, tqv)
 
-    #await check_stuck_when_zero(dut, tqv)
+    await check_stuck_when_zero(dut, tqv)
 
     # Resetting the design should yield the initial state back
     await tqv.reset()
@@ -116,10 +116,14 @@ async def how_to_test_example(tqv):
     """    
     await tqv.write_reg(CMD_REG, CMD_STOP)
 
-    await tqv.write_reg(FIBREG1, int('11110000',2))
+    await tqv.write_reg(FIBREG1, int('11100000',2))
     # FibReg2, FibReg3 and FibReg4 do not need to be set to zero
+    # but we do it "to be safe" anyways
+    await tqv.write_reg(FIBREG2, 0)
+    await tqv.write_reg(FIBREG3, 0)
+    await tqv.write_reg(FIBREG4, 0)
 
-    await tqv.write_reg(TAPS1, int('01100000',2)) # 
+    await tqv.write_reg(TAPS1, int('01100000',2)) 
     # you *need* to clear the upper tap bits!
     await tqv.write_reg(TAPS2, 0)
     await tqv.write_reg(TAPS3, 0)
@@ -136,7 +140,7 @@ async def how_to_test_example(tqv):
         v = f"{val:=08b}"[0:3]
         print(f"{i}: r=<{v}> b={v[-1]}")
 
-        await advance(tqv)
+        await tqv.write_reg(CMD_REG, CMD_ADVANCE)
 
 async def stop(tqv):
     """
@@ -482,7 +486,7 @@ async def check_non_full_cycle(dut, tqv):
     dut._log.info(f"Check that FibRNG produces non maximal cycles with a bad choice of taps")
 
     n = 4
-    tap = int('001100000',2)
+    tap = int('01010000',2)
 
     await stop(tqv)
     await writeLFSR(tqv,0,255) # start with all ones set
@@ -492,15 +496,15 @@ async def check_non_full_cycle(dut, tqv):
     # bitstring consisting of "1"'s only
     initVal = f"{2**n-1:=0b}" 
 
+    print("For n=4 the tap '0101' yields a cycle length of 7:")
+
     def extract_n_bits(n,val):
         return f"{val:=08b}"[0:n]
 
-    for i in range((2**n)+2):
+    for i in range((2**n)):
         w = (await readLFSR(tqv))[0]
         wS = extract_n_bits(n,w)
-        print(f"{i:=2}: {w:=08b} {wS}")
-        #assert w != initVal
-        #assert (await readTaps(tqv))[0] == tap
+        print(f" {i:=2}: r=<{wS}>")
         await advance(tqv)
 
 
@@ -529,6 +533,7 @@ async def check_initial_state(dut,tqv):
     assert lfsr == [255,255,255,255]
 
     taps = await readTaps(tqv)
+    printWords(taps)
     assert taps == [192,0,4,1]
 
 
