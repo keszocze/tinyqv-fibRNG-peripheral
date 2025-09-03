@@ -44,8 +44,8 @@ The random number is obtained by reading the rightmost bit after each iteration.
 
 To match the interface of the [Tiny Tapout RISC-V Peripheral Competition](https://tinytapeout.com/competitions/risc-v-peripheral/), the Fibonacci LSFR is implemented as follows. The vectors $r$ and $t$ consist of $4$ words of $8$-bit length, i.e. are of total length of $32$:
 
-$$r=\langle \underbrace{r_1 .. r_8}_{\texttt{FIBREG1}} ~ \underbrace{r_9 .. r_{16}}_{\texttt{FIBREG2}} ~ \underbrace{r_{17} .. r_{24}}_{\texttt{FIBREG3}} ~ \underbrace{r_{25} .. r_{32}}_{\texttt{FIBREG4}}\rangle = \langle \texttt{FIBREG1} ~ \texttt{FIBREG2} ~ \texttt{FIBREG3} ~ \texttt{FIBREG4}\rangle $$
-$$t=\langle \underbrace{t_1 .. t_8}_{\texttt{TAPS1}} ~ \underbrace{t_9 .. t_{16}}_{\texttt{TAPS2}} ~ \underbrace{t_{17} .. t_{24}}_{\texttt{TAPS3}} ~ \underbrace{t_{25} .. t_{32}}_{\texttt{TAPS4}}\rangle = \langle \texttt{TAPS1} ~ \texttt{TAPS2} ~ \texttt{TAPS3} ~ \texttt{TAPS4}\rangle$$
+$$ r=\langle \underbrace{r_1 .. r_8}_{\texttt{FIBREG1}} ~ \underbrace{r_9 .. r_{16}}_{\texttt{FIBREG2}} ~ \underbrace{r_{17} .. r_{24}}_{\texttt{FIBREG3}} ~ \underbrace{r_{25} .. r_{32}}_{\texttt{FIBREG4}}\rangle = \langle \texttt{FIBREG1} ~ \texttt{FIBREG2} ~ \texttt{FIBREG3} ~ \texttt{FIBREG4}\rangle $$
+$$t=\langle \underbrace{t_1 .. t_8}_{\texttt{TAPS1}} ~ \underbrace{t_9 .. t_{16}}_{\texttt{TAPS2}} ~ \underbrace{t_{17} .. t_{24}}_{\texttt{TAPS3}} ~ \underbrace{t_{25} .. t_{32}}_{\texttt{TAPS4}}\rangle = \langle \texttt{TAPS1} ~ \texttt{TAPS2} ~ \texttt{TAPS3} ~ \texttt{TAPS4}\rangle $$
 
 Reading the new random bit (i.e., $r_{32}$) is done as follows using cocotb (it should be straight-forward to translate this to a `C++` program):
 
