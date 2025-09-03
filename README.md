@@ -6,6 +6,3 @@ This is an entry to the [Tiny Tapeout Risc-V peripheral challenge](https://tinyt
 
 
 [Read the documentation for FibRNG here](docs/info.md)
-
-```{include} docs/info.md
-```
