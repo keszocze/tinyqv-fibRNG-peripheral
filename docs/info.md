@@ -34,7 +34,13 @@ Figure 1 shows an Fibonaccy LFSR made from $16$ bits that uses the taps $1, 11, 
 ![A $16$-bit Fibonacci LFSR using the taps $1, 11, 13,14$ and $16$. (Taken from [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:LFSR-F16.svg), Author: KCAuXy4p)](LFSR-F16.svg)
 
 The current vector $r$ is given by $r=\langle 10101100\, 11100001 \rangle$. The next bit is computed as $$b=r_1 \oplus r_{11} \oplus r_{13} \oplus r_{14} \oplus r_{16} = 1 \oplus 1 \oplus 0 \oplus 0 \oplus 1 = 0$$
-and $r$ is then  updated to $$r=\langle 01010110\, 01110000 \rangle.$$ The update rule can also be written as $$r' = \left\langle \left(\bigoplus_{i=1}^n r_i \wedge t_i\right) ~ r[1:31]\right\rangle.$$
+and $r$ is then  updated to 
+
+$$r=\langle 01010110\, 01110000 \rangle.$$ 
+
+The update rule can also be written as 
+
+$$r' = \left\langle \left(\bigoplus_{i=1}^n r_i \wedge t_i\right) ~~~ r[1:31]\right\rangle.$$
 
 The random number is obtained by reading the rightmost bit after each iteration.
 
@@ -87,7 +93,7 @@ fibReg4 = await tqv.read_reg(FIBREG4)
 randomBit = fibReg4 & 1
 ```
 
-Furhtermore, FibRNG can be in one of the following modes of operation: 
+Furthermore, FibRNG can be in one of the following modes of operation: 
 
 * `Stopped`
 * `Running`
