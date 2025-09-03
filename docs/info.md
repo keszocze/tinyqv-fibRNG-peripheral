@@ -17,9 +17,9 @@ Author: Oliver Keszocze
 
 Peripheral index: nn
 
-## What it does: Generating Random Numbers
+## What it does: Generating (Pseudo-)Random Numbers
 
-*FibRNG* is a reconfigurable Random Number Generator (RNG) that generates random bits by via a Fibonacci Linear-Feebdack Shift Registers (LFSR) (see [Wikipedia](https://en.wikipedia.org/wiki/Linear-feedback_shift_register) for a detailed description). For this, it stores two bit-vectors. The first one ($r$) stores the random bit string and the other one ($t$) stores the *taps*, i.e., the bit indices in $r$ that are using to compute the next bit. In each step, this new random bit $b$ is determined by computing
+*FibRNG* is a reconfigurable (Pseudo) Random Number Generator (RNG) that generates random bits by via a Fibonacci Linear-Feebdack Shift Registers (LFSR) (see [Wikipedia](https://en.wikipedia.org/wiki/Linear-feedback_shift_register) for a detailed description). For this, it stores two bit-vectors. The first one ($r$) stores the random bit string and the other one ($t$) stores the *taps*, i.e., the bit indices in $r$ that are using to compute the next bit. In each step, this new random bit $b$ is determined by computing
 $$b=\bigoplus\limits_{i=1}^{n} r_i \wedge t_i.$$
 The vector $r$ is then updated by shifting in the new bit $b$ from the left, dropping the last bit to the right.
 
@@ -35,17 +35,24 @@ and $r$ is then  updated to $$r=\langle 01010110\, 01110000 \rangle.$$ The updat
 
 The random number is obtained by reading the rightmost bit after each iteration.
 
+### Maximum Length Sequences
+
+Generating bit-vectors $r$ as described above is necessarily cyclic, i.e. after a certain number of iterations, $r$ will be in its initial configuration again. 
+
+When using an LFSR one usually aims of obtaining sequences of maximal length (named *Maximum Length Sequences* (MLS), see [Wikipedia](https://en.wikipedia.org/wiki/Maximum_length_sequence)) as this yields most random numbers given a specific configuration of the LFSR. 
+
+There are lists of known taps that, for a bit-vector of length $n$ will yield a MLS of length $2^n-1$. The bit-vector $r=\langle 0 \ldots 0 \rangle$ must not occur as it will only ever generate a new random bit $b$ of value $0$, i.e., the number generation is stuck. Wikipedia has a list of taps for up to $n$ bits [here](https://en.wikipedia.org/wiki/Linear-feedback_shift_register#Example_polynomials_for_maximal_LFSRs9) and a [Xilinx Application Note](http://www.xilinx.com/support/documentation/application_notes/xapp052.pdf) provides taps for up to $168$ bits 
 
 
-**Hier dann noch über maximal lange Cyclen reden**
 
 
 ## How it is implemented
 
 To match the interface of the [Tiny Tapout RISC-V Peripheral Competition](https://tinytapeout.com/competitions/risc-v-peripheral/), the Fibonacci LSFR is implemented as follows. The vectors $r$ and $t$ consist of $4$ words of $8$-bit length, i.e. are of total length of $32$:
 
-$$ r=\langle \underbrace{r_1 .. r_8}_{{FIBREG1}} ~ \underbrace{r_9 .. r_{16}}_{{FIBREG2}} ~ {r_{17} .. r_{24}}_{{FIBREG3}} ~ \underbrace{r_{25} .. r_{32}}_{{FIBREG4}}\rangle = \langle {FIBREG1} ~ {FIBREG2} ~ {FIBREG3} ~ {FIBREG4}\rangle $$
-$$t=\langle \underbrace{t_1 .. t_8}_{{TAPS1}} ~ \underbrace{t_9 .. t_{16}}_{{TAPS2}} ~ \underbrace{t_{17} .. t_{24}}_{{TAPS3}} ~ \underbrace{t_{25} .. t_{32}}_{{TAPS4}}\rangle = \langle {TAPS1} ~ {TAPS2} ~ {TAPS3} ~ {TAPS4}\rangle $$
+$$ r  =\langle \underbrace{r_1 .. r_8}_{{FIBREG1}} ~ \underbrace{r_9 .. r_{16}}_{{FIBREG2}} ~ \underbrace{r_{17} .. r_{24}}_{FIBREG3} ~ \underbrace{r_{25} .. r_{32}}_{{FIBREG4}}\rangle  = \langle {FIBREG1} ~ {FIBREG2} ~ {FIBREG3} ~ {FIBREG4}\rangle $$
+
+$$ t=\langle \underbrace{t_1 .. t_8}_{{TAPS1}} ~ \underbrace{t_9 .. t_{16}}_{{TAPS2}} ~ \underbrace{t_{17} .. t_{24}}_{{TAPS3}} ~ \underbrace{t_{25} .. t_{32}}_{{TAPS4}}\rangle = \langle {TAPS1} ~ {TAPS2} ~ {TAPS3} ~ {TAPS4}\rangle $$
 
 Reading the new random bit (i.e., $r_{32}$) is done as follows using cocotb (it should be straight-forward to translate this to a `C++` program):
 
@@ -112,7 +119,7 @@ As an example, we configure `FibgRNG` to be used as the RNG shown in Figure 1, i
     await tqv.write_reg(CMD_REG, CMD_EXPLICIT)
 ```
 
-It is important to set `TAPS3` and `TAPS4`to $\langle 0000000\rangle$ as *FibRNG* will 
+It is important to set `TAPS3` and `TAPS4` to $\langle 0000000\rangle$ as *FibRNG* will 
 always compute $\bigoplus\limits_{i=1}^{32} r_i \wedge t_i$ (i.e., up to $32$ bits). The 
 taps having an index greater than $n$ ($16$ in this example) need to be zeroed as otherwise
 these upper bits are used in the computation of $b$. Entries $r_{i}$ with $i > n$ can have 

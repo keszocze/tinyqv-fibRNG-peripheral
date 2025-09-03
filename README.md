@@ -2,7 +2,7 @@
 
 # FibRNG - A random number generator using linear-feedback shift registers
 
-This is an entry to the [Tiny Tapeout RISC-V Peripheral Competition](https://tinytapeout.com/competitions/risc-v-peripheral/).
+This is an entry to the [Tiny Tapeout Risc-V peripheral challenge](https://tinytapeout.com/competitions/risc-v-peripheral/).
 
 
-[Read the documentation for it here](docs/info.md)
+[Read the documentation for FibRNG here](docs/info.md)
