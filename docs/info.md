@@ -40,7 +40,7 @@ $$r=\langle 01010110\, 01110000 \rangle.$$
 
 The update rule can also be written as 
 
-$$r' = \left\langle \left(\bigoplus_{i=1}^n r_i \wedge t_i\right) ~~~ r[1:31]\right\rangle.$$
+$$r' = \left\langle \bigoplus_{i=1}^n r_i \wedge t_i\ ~~ r[1:31]\right\rangle.$$
 
 The random number is obtained by reading the rightmost bit after each iteration.
 
