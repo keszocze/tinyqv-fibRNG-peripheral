@@ -50,9 +50,19 @@ There are lists of known taps that, for a bit-vector of length $n$ will yield a 
 
 To match the interface of the [Tiny Tapout RISC-V Peripheral Competition](https://tinytapeout.com/competitions/risc-v-peripheral/), the Fibonacci LSFR is implemented as follows. The vectors $r$ and $t$ consist of $4$ words of $8$-bit length, i.e. are of total length of $32$:
 
-$$ r  =\langle r_1 .. r_8 ~ r_9 .. r_{16} ~ r_{17}\ldots r_{24} ~ r_{25} .. r_{32}\rangle  =  \texttt{FIBREG1} ~ \texttt{FIBREG2} ~ \texttt{FIBREG3} ~ \texttt{FIBREG4} $$
+$$ 
+\begin{aligned}
+r  &=\langle r_1 .. r_8 ~ r_9 .. r_{16} ~ r_{17}\ldots r_{24} ~ r_{25} .. r_{32}\rangle \\
+ &= \langle \texttt{FIBREG1} ~ \texttt{FIBREG2} ~ \texttt{FIBREG3} ~ \texttt{FIBREG4} \rangle
+\end{aligned}
+$$
 
-$$ t=\langle t_1 .. t_8 ~ t_9 .. t_{16} ~ t_{17} .. t_{24} ~ t_{25} .. t_{32}\rangle =  \texttt{TAPS1} ~ \texttt{TAPS2} ~ \texttt{TAPS3} ~ \texttt{TAPS4} $$
+$$ 
+\begin{aligned}
+t &=\langle t_1 .. t_8 ~ t_9 .. t_{16} ~ t_{17} .. t_{24} ~ t_{25} .. t_{32}\rangle \\
+&= \langle \texttt{TAPS1} ~ \texttt{TAPS2} ~ \texttt{TAPS3} ~ \texttt{TAPS4} \rangle
+\end{aligned}
+$$
 
 Reading the new random bit (i.e., $r_{32}$) is done as follows using cocotb (it should be straight-forward to translate this to a `C++` program):
 
