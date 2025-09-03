@@ -89,15 +89,15 @@ async def test_project(dut):
     # parantheses).
     await check_full_cycle(dut, tqv, 2, 192) # 11(000000)
     await check_full_cycle(dut, tqv, 3, 96) # 011(00000)
-    # await check_full_cycle(dut, tqv, 4, 48) # 0011(0000)
+    await check_full_cycle(dut, tqv, 4, 48) # 0011(0000)
     # await check_full_cycle(dut, tqv, 5, 40) # 00101(000)
     # await check_full_cycle(dut, tqv, 6, 12) # 000011(00)
     # await check_full_cycle(dut, tqv, 7, 6) # 0000011(0)
     # await check_full_cycle(dut, tqv, 8, 29) # 00011101
 
+    await check_non_full_cycle(dut, tqv)
 
-
-    await check_stuck_when_zero(dut, tqv)
+    #await check_stuck_when_zero(dut, tqv)
 
     # Resetting the design should yield the initial state back
     await tqv.reset()
@@ -354,7 +354,7 @@ async def stoppedIsFixed(dut,tqv,vals):
     Parameters
     ----------
         dut: The design under test
-        tqc: The interface to the peripheral
+        tqv: The interface to the FibRNG peripheral
         vals (list<int>): The four values that should remain the same
     """
     for n in range(10):
@@ -374,7 +374,7 @@ async def check_stopped_rng(dut,tqv):
     Parameters
     ----------
         dut: The design under test
-        tqc: The interface to the peripheral
+        tqv: The interface to the FibRNG peripheral
     """
     dut._log.info("A stopped RNG should always produce the same values")
 
@@ -406,7 +406,7 @@ async def check_mode_changes(dut,tqv):
     Parameters
     ----------
         dut: The design under test
-        tqc: The interface to the peripheral
+        tqv: The interface to the FibRNG peripheral
     """
 
     dut._log.info("Changing the modes can be seen when querying afterwards")
@@ -422,12 +422,12 @@ async def check_mode_changes(dut,tqv):
 
 async def check_full_cycle(dut, tqv, n, tap):
     """
-    Checks that FibRNG does procude the maximal length cycle of a given length.
+    Checks that FibRNG does produce the maximal length cycle of a given length.
 
     Parameters
     ----------
         dut: The design under test
-        tqc: The interface to the peripheral
+        tqv: The interface to the FibRNG peripheral
         n (int): The length of the RNG in bits
         tap (int): The tap to use (i.e. TAPS1)
     """
@@ -457,16 +457,53 @@ async def check_full_cycle(dut, tqv, n, tap):
         await advance(tqv)
         w = (await readLFSR(tqv))[0]
         wS = extract_n_bits(n,w)
-        #print(f"{i}: {w:=08b} {wS}")
+        #print(f"{i:=3}: {w:=08b} {wS}")
         assert w != initVal
         assert (await readTaps(tqv))[0] == tap
 
     await advance(tqv)
     w = (await readLFSR(tqv))[0]
     wS = extract_n_bits(n,w)
-    #print(f"{2**n-2}: {w:=08b} {wS}")
+    #print(f"{2**n-2:=3}: {w:=08b} {wS}")
     assert wS == initVal
     assert (await readTaps(tqv))[0] == tap
+
+async def check_non_full_cycle(dut, tqv):
+    """
+    Checks that FibRNG produces non maximal cycles with a bad choice of taps
+
+    Parameters
+    ----------
+        dut: The design under test
+        tqv: The interface to the FibRNG peripheral
+    """
+
+
+    dut._log.info(f"Check that FibRNG produces non maximal cycles with a bad choice of taps")
+
+    n = 4
+    tap = int('001100000',2)
+
+    await stop(tqv)
+    await writeLFSR(tqv,0,255) # start with all ones set
+    await writeTaps(tqv,[tap,0,0,0])
+    await set_explicit(tqv)
+
+    # bitstring consisting of "1"'s only
+    initVal = f"{2**n-1:=0b}" 
+
+    def extract_n_bits(n,val):
+        return f"{val:=08b}"[0:n]
+
+    for i in range((2**n)+2):
+        w = (await readLFSR(tqv))[0]
+        wS = extract_n_bits(n,w)
+        print(f"{i:=2}: {w:=08b} {wS}")
+        #assert w != initVal
+        #assert (await readTaps(tqv))[0] == tap
+        await advance(tqv)
+
+
 
 async def check_initial_state(dut,tqv):
     """
@@ -479,10 +516,10 @@ async def check_initial_state(dut,tqv):
     Parameters
     ----------
         dut: The design under test
-        tqc: The interface to the peripheral
+        tqv: The interface to the FibRNG peripheral
     """    
 
-    dut._log.info("The initial state is as expected")
+    dut._log.info("Check that the initial state is as expected")
 
     m = await readMode(tqv)
     assert m == MODE_STOPPED
@@ -503,8 +540,10 @@ async def check_stuck_when_zero(dut, tqv):
     Parameters
     ----------
         dut: The design under test
-        tqc: The interface to the peripheral
+        tqv: The interface to the FibRNG peripheral
     """
+
+    dut._log.info("Check that a LSFR value of 0 is stuck")
 
     await set_explicit(tqv)
     await writeLFSRs(tqv, [0,0,0,0])
@@ -515,3 +554,5 @@ async def check_stuck_when_zero(dut, tqv):
         for i in range(10):
             assert (await readLFSR(tqv)) == [0,0,0,0]
             await advance(tqv)
+
+

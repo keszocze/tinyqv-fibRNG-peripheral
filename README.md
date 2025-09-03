@@ -4,11 +4,13 @@
 
 [TinyQV](https://github.com/TinyTapeout/ttsky25a-tinyQV) is a Risc-V CPU designed for Tiny Tapeout. This repository hosts an entry to the [Tiny Tapeout Risc-V peripheral challenge](https://tinytapeout.com/competitions/risc-v-peripheral/).
 
+The design has been developed in [Clash](https://clash-lang.org/) in the [corresponding repository](https://github.com/keszocze/fibRNG). This repository contains a generated verilog file and tests. The design will then be submitted to the TinyQV [repository](https://github.com/tinytapeout/ttsky25a-tinyqv).
+
 
 ## What it does: Generating (Pseudo-)Random Numbers
 
 *FibRNG* is a reconfigurable (Pseudo) Random Number Generator (RNG) that generates random bits by via a Fibonacci Linear-Feebdack Shift Registers (LFSR) (see [Wikipedia](https://en.wikipedia.org/wiki/Linear-feedback_shift_register) for a detailed description). For this, it stores two bit-vectors. The first one ($r$) stores the random bit string and the other one ($t$) stores the *taps*, i.e., the bit indices in $r$ that are using to compute the next bit. In each step, this new random bit $b$ is determined by computing
-$$b=\bigoplus\limits_{i=1}^{n} r_i \wedge t_i.$$
+$b=\bigoplus\limits_{i=1}^{n} r_i \wedge t_i.$
 The vector $r$ is then updated by shifting in the new bit $b$ from the left, dropping the last bit to the right.
 
 **Note:** The description of this document follows [Wikipedia](https://en.wikipedia.org/wiki/Linear-feedback_shift_register). This means that the indicies into the bit-vector start with $1$ and increase from left to right, instead of starting from $0$ and increase to the left.
