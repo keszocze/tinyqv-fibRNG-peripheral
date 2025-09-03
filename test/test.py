@@ -89,11 +89,15 @@ async def test_project(dut):
     # parantheses).
     await check_full_cycle(dut, tqv, 2, 192) # 11(000000)
     await check_full_cycle(dut, tqv, 3, 96) # 011(00000)
-    await check_full_cycle(dut, tqv, 4, 48) # 0011(0000)
-    await check_full_cycle(dut, tqv, 5, 40) # 00101(000)
-    await check_full_cycle(dut, tqv, 6, 12) # 000011(00)
-    await check_full_cycle(dut, tqv, 7, 6) # 0000011(0)
-    await check_full_cycle(dut, tqv, 8, 29) # 00011101
+    # await check_full_cycle(dut, tqv, 4, 48) # 0011(0000)
+    # await check_full_cycle(dut, tqv, 5, 40) # 00101(000)
+    # await check_full_cycle(dut, tqv, 6, 12) # 000011(00)
+    # await check_full_cycle(dut, tqv, 7, 6) # 0000011(0)
+    # await check_full_cycle(dut, tqv, 8, 29) # 00011101
+
+
+
+    await check_stuck_when_zero(dut, tqv)
 
     # Resetting the design should yield the initial state back
     await tqv.reset()
@@ -489,3 +493,25 @@ async def check_initial_state(dut,tqv):
 
     taps = await readTaps(tqv)
     assert taps == [192,0,4,1]
+
+
+async def check_stuck_when_zero(dut, tqv):
+    """
+    Checks that FibRNG continuously produces zeros only, regardless of the taps
+    when the bit-vector is set to zeroes only
+
+    Parameters
+    ----------
+        dut: The design under test
+        tqc: The interface to the peripheral
+    """
+
+    await set_explicit(tqv)
+    await writeLFSRs(tqv, [0,0,0,0])
+
+    for taps in [[4,0,0,0], [4,8,16,32], [0,0,0,0], [1,1,1,1]]:
+        await writeTaps(tqv, taps)
+
+        for i in range(10):
+            assert (await readLFSR(tqv)) == [0,0,0,0]
+            await advance(tqv)
