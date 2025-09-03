@@ -13,7 +13,6 @@ You can also include images in this folder and reference them in the markdown. E
 
 # FibRNG 
 
-** Links auf die Tests in Github hinzufügen!**
 
 Author: Oliver Keszocze
 
@@ -21,7 +20,7 @@ Peripheral index: nn
 
 ## What it does: Generating (Pseudo-)Random Numbers
 
-*FibRNG* is a reconfigurable (Pseudo) Random Number Generator (RNG) that generates random bits by via a Fibonacci Linear-Feebdack Shift Registers (LFSR) (see [Wikipedia](https://en.wikipedia.org/wiki/Linear-feedback_shift_register) for a detailed description). For this, it stores two bit-vectors. The first one ($r$) stores the random bit string and the other one ($t$) stores the *taps*, i.e., the bit indices in $r$ that are using to compute the next bit. In each step, this new random bit $b$ is determined by computing $b=\bigoplus\limits_{i=1}^{n} r_i \wedge t_i.$
+*FibRNG* is a reconfigurable (Pseudo) Random Number Generator (RNG) that generates random bits by via a Fibonacci Linear-Feebdack Shift Registers (LFSR) (see [Wikipedia](https://en.wikipedia.org/wiki/Linear-feedback_shift_register) for a detailed description). For this, it stores two bit-vectors. The first one ($r$) stores the random bit string and the other one ($t$) stores the *taps*, i.e., the bit indices in $r$ that are using to compute the next bit. In each step, this new random bit $b$ is determined by computing $$b=\bigoplus\limits_{i=1}^{n} r_i \wedge t_i.$$
 The vector $r$ is then updated by shifting in the new bit $b$ from the left, dropping the last bit to the right.
 
 **Note:** The description of this document follows [Wikipedia](https://en.wikipedia.org/wiki/Linear-feedback_shift_register). This means that the indicies into the bit-vector start with $1$ and increase from left to right, instead of starting from $0$ and increase to the left.
@@ -46,6 +45,7 @@ There are lists of known taps that, for a bit-vector of length $n$ will yield a 
 
 
 *FibRNG* is initially configured to produce a MLS for $32$ bits, i.e., the registers are set to
+
 $$
 \begin{aligned}
 r &= \langle 11111111 ~~ 11111111 ~~ 11111111 ~~ 11111111\rangle ~ \text{and}\\
@@ -172,7 +172,7 @@ Reading from any address not specified in the table below will return the word `
 
 ## How to test
 
-The following cocotb code configures *FibRNG* to use a $3$-bit Fibonacci LFSR having the maximum length sequence of $2^3-1=7$. This is actual code as used in the [testbench](../test/test.py).
+The following cocotb code configures *FibRNG* to use a $3$-bit Fibonacci LFSR having the maximum length sequence of $2^3-1=7$. This is actual code as used in the `how_to_test_example` method in the [testbench](../test/test.py).
 
 ```python
 await tqv.write_reg(CMD_REG, CMD_STOP)
