@@ -119,7 +119,7 @@ To configure either the shift register $r$ or the taps $t$, set the operation mo
 
 
 #### Example
-As an example, we configure `FibgRNG` to be used as the RNG shown in Figure 1, i.e., $n=16$, $r=\langle 10101100 ~ 11100001 \rangle$ and $t=\langle 10000000 ~ 00101101\rangle$. The following [cocotb code]() 
+As an example, we configure `FibgRNG` to be used as the RNG shown in Figure 1, i.e., $n=16$, $r=\langle 10101100 ~ 11100001 \rangle$ and $t=\langle 10000000 ~ 00101101\rangle$.
 
 ```python
 await tqv.write_reg(CMD_REG, CMD_STOP)
@@ -144,7 +144,7 @@ these upper bits are used in the computation of $b$. Entries $r_{i}$ with $i > n
 arbitrary values as they will not be taken into account as we have $r_i \wedge t_i = r_i \wedge 0 = 0$ for 
 all $i > n$.
 
-This example can be directly transalted into a `C++` program.
+This example can be directly translated into a `C++` program.
 
 ### Register map
 
@@ -172,7 +172,7 @@ Reading from any address not specified in the table below will return the word `
 
 ## How to test
 
-The following cocotb code configures *FibRNG* to use a $3$-bit Fibonacci LFSR having the maximum length sequence of $2^3-1=7$.
+The following cocotb code configures *FibRNG* to use a $3$-bit Fibonacci LFSR having the maximum length sequence of $2^3-1=7$. This is actual code as used in the [testbench](../test/test.py).
 
 ```python
 await tqv.write_reg(CMD_REG, CMD_STOP)
