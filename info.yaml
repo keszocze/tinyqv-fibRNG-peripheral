@@ -1,9 +1,9 @@
 # Tiny Tapeout project information
 project:
-  title:        "A fancy title does the trick"      # Project title
-  author:       "Yep that's me"      # Your name
+  title:        "FibRNG"      # Project title
+  author:       "Oliver Keszocze"      # Your name
   discord:      ""      # Your discord username, for communication and automatically assigning you a Tapeout role (optional)
-  description:  "It will do stuff"      # One line description of what your project does
+  description:  "Random Number Generator based on Fibonacci Linear-Feedback Shift Registers"      # One line description of what your project does
   language:     "Verilog" # other examples include SystemVerilog, Amaranth, VHDL, etc
   clock_hz:     64000000  # Clock frequency in Hz (or 0 if not applicable)
 
@@ -17,7 +17,7 @@ project:
   # Source files must be in ./src and you must list each source file separately, one per line.
   # Don't forget to also update `PROJECT_SOURCES` in test/Makefile.
   source_files:
-    - "peripheral.v"
+    - "fibRNG.v"
     - "tt_wrapper.v"
     - "test_harness/falling_edge_detector.sv"
     - "test_harness/rising_edge_detector.sv"
