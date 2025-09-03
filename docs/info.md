@@ -52,14 +52,14 @@ To match the interface of the [Tiny Tapout RISC-V Peripheral Competition](https:
 
 $$ 
 \begin{aligned}
-r  &=\langle r_1 .. r_8 ~ r_9 .. r_{16} ~ r_{17}\ldots r_{24} ~ r_{25} .. r_{32}\rangle \\
+r  &=\langle r_1\ldots  r_8 ~~~ r_9\ldots r_{16} ~~~ r_{17}\ldots r_{24} ~~~ r_{25}\ldots r_{32}\rangle \\
  &= \langle \texttt{FIBREG1} ~ \texttt{FIBREG2} ~ \texttt{FIBREG3} ~ \texttt{FIBREG4} \rangle
 \end{aligned}
 $$
 
 $$ 
 \begin{aligned}
-t &=\langle t_1 .. t_8 ~ t_9 .. t_{16} ~ t_{17} .. t_{24} ~ t_{25} .. t_{32}\rangle \\
+t &=\langle t_1\ldots t_8 ~~~ t_9\ldots t_{16} ~~~ t_{17}\ldots t_{24} ~~~ t_{25}\ldots t_{32}\rangle \\
 &= \langle \texttt{TAPS1} ~ \texttt{TAPS2} ~ \texttt{TAPS3} ~ \texttt{TAPS4} \rangle
 \end{aligned}
 $$
@@ -90,7 +90,7 @@ When in `Explicit` mode, the next random bit $b$ (and, hence, $r'$) is only comp
 
 
 
-## Commands
+### Commands
 
 FibRNG can execute the commands from the following table.  To execute them,  write the corresponding value to the `CMDREG` (`0b1111`) register.
 
@@ -105,12 +105,12 @@ FibRNG can execute the commands from the following table.  To execute them,  wri
 
 **Note:** The register addresses are shown in binary, *not*, hex!
 
-## Configuration
+### Configuration
 
 To configure either the shift register $r$ or the taps $t$, set the operation mode to `Stopped` (or `Explicit` and then do not issue an `Advance` command while setting the new values) and then write to the registers corresponding to the individual words. Note that you *can* write to `FIBREG`$n$/`TAPS`$n$ in any mode but be aware that $r$ might be updated while your are writing the new values.
 
 
-### Example
+#### Example
 As an example, we configure `FibgRNG` to be used as the RNG shown in Figure 1, i.e., $n=16$, $r=\langle 10101100 ~ 11100001 \rangle$ and $t=\langle 10000000 ~ 00101101\rangle$. The following [cocotb code]() 
 
 ```python
@@ -138,7 +138,7 @@ all $i > n$.
 
 This example can be directly transalted into a `C++` program.
 
-## Register map
+### Register map
 
 
 Reading from any address not specified in the table below will return the word `0b00000000`.
