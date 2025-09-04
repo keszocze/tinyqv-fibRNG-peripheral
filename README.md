@@ -11,21 +11,21 @@ You can find in the repository hosting the Clash design [here](https://github.co
 
 ## What it does: Generating (Pseudo-)Random Numbers
 
-*FibRNG* is a reconfigurable (Pseudo) Random Number Generator (RNG) that generates random bits by via a Fibonacci Linear-Feebdack Shift Registers (LFSR) (see [Wikipedia](https://en.wikipedia.org/wiki/Linear-feedback_shift_register) for a detailed description). For this, it stores two bit-vectors. The first one ($r$) stores the random bit string and the other one ($t$) stores the *taps*, i.e., the bit indices in $r$ that are using to compute the next bit. In each step, this new random bit $b$ is determined by computing 
+*FibRNG* is a reconfigurable (Pseudo) Random Number Generator (RNG) that generates random bits by via a Fibonacci Linear-Feedback Shift Registers (LFSR) (see [Wikipedia](https://en.wikipedia.org/wiki/Linear-feedback_shift_register) for a detailed description). For this, it stores two bit-vectors. The first one ($r$) stores the random bit string and the other one ($t$) stores the *taps*, i.e., the bit indices in $r$ that are using to compute the next bit. In each step, this new random bit $b$ is determined by computing 
 
 $$b=\bigoplus\limits_{i=1}^{n} r_i \wedge t_i.$$
 
 The vector $r$ is then updated by shifting in the new bit $b$ from the left, dropping the last bit to the right.
 
-**Note:** The description of this document follows [Wikipedia](https://en.wikipedia.org/wiki/Linear-feedback_shift_register). This means that the indicies into the bit-vector start with $1$ and increase from left to right, instead of starting from $0$ and increase to the left.
+**Note:** The description of this document follows [Wikipedia](https://en.wikipedia.org/wiki/Linear-feedback_shift_register). This means that the indices into the bit-vector start with $1$ and increase from left to right, instead of starting from $0$ and increase to the left.
 
 ### Example
-Figure 1 shows an Fibonaccy LFSR made from $16$ bits that uses the taps $1, 11, 13,14$ and $16$. The bit-vector $t=\langle 10000000 00101101\rangle$ is only shown implicitly as the numbers  above the bit-vector $r$.
+Figure 1 shows a Fibonacci LFSR made from $16$ bits that uses the taps $1, 11, 13,14$ and $16$. The bit-vector $t=\langle 10000000 00101101\rangle$ is only shown implicitly as the numbers  above the bit-vector $r$.
 
 ![A $16$-bit Fibonacci LFSR using the taps $1, 11, 13,14$ and $16$. (Taken from [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:LFSR-F16.svg), Author: KCAuXy4p)](docs/LFSR-F16.svg)
 
 The current vector $r$ is given by $r=\langle 10101100\, 11100001 \rangle$. The next bit is computed as $$b=r_1 \oplus r_{11} \oplus r_{13} \oplus r_{14} \oplus r_{16} = 1 \oplus 1 \oplus 0 \oplus 0 \oplus 1 = 0$$
-and $r$ is then  updated to 
+and $r$ is then updated to 
 
 $$r=\langle 01010110\, 01110000 \rangle.$$ 
 
@@ -56,7 +56,7 @@ $$
 
 ## How it is implemented
 
-To match the interface of the [Tiny Tapout RISC-V Peripheral Competition](https://tinytapeout.com/competitions/risc-v-peripheral/), the Fibonacci LSFR is implemented as follows. The vectors $r$ and $t$ consist of $4$ words of $8$-bit length, i.e. are of total length of $32$:
+To match the interface of the [Tiny Tapeout RISC-V Peripheral Competition](https://tinytapeout.com/competitions/risc-v-peripheral/), the Fibonacci LSFR is implemented as follows. The vectors $r$ and $t$ consist of $4$ words of $8$-bit length, i.e. are of total length of $32$:
 
 $$ 
 \begin{aligned}
@@ -100,7 +100,7 @@ When in `Explicit` mode, the next random bit $b$ (and, hence, $r'$) is only comp
 
 ### Commands
 
-FibRNG can execute the commands from the following table.  To execute them,  write the corresponding value to the `CMDREG` (`0b1111`) register.
+FibRNG can execute the commands from the following table.  To execute them, write the corresponding value to the `CMDREG` (`0b1111`) register.
 
 | Command    | Value         | Description                                                          |
 |------------|---------------|----------------------------------------------------------------------|
@@ -115,7 +115,7 @@ FibRNG can execute the commands from the following table.  To execute them,  wri
 
 ### Configuration
 
-To configure either the shift register $r$ or the taps $t$, set the operation mode to `Stopped` (or `Explicit` and then do not issue an `Advance` command while setting the new values) and then write to the registers corresponding to the individual words. Note that you *can* write to `FIBREG`$n$/`TAPS`$n$ in any mode but be aware that $r$ might be updated while your are writing the new values.
+To configure either the shift register $r$ or the taps $t$, set the operation mode to `Stopped` (or `Explicit` and then do not issue an `Advance` command while setting the new values) and then write to the registers corresponding to the individual words. Note that you *can* write to `FIBREG`$n$/`TAPS`$n$ in any mode but be aware that $r$ might be updated while you are writing the new values.
 
 
 #### Example
