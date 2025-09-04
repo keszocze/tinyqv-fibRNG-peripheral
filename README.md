@@ -4,13 +4,17 @@
 
 [TinyQV](https://github.com/TinyTapeout/ttsky25a-tinyQV) is a Risc-V CPU designed for Tiny Tapeout. This repository hosts an entry to the [Tiny Tapeout Risc-V peripheral challenge](https://tinytapeout.com/competitions/risc-v-peripheral/).
 
-The design has been developed in [Clash](https://clash-lang.org/) in the [corresponding repository](https://github.com/keszocze/fibRNG). This repository contains a generated verilog file and tests. The design will then be submitted to the TinyQV [repository](https://github.com/tinytapeout/ttsky25a-tinyqv).
+The design has been developed in [Clash](https://clash-lang.org/). This repository contains a verilog file that was generated from the Clash source and tests written in cocotb/Python. The design will then be submitted to the TinyQV [repository](https://github.com/tinytapeout/ttsky25a-tinyqv). 
+
+You can find in the repository hosting the Clash design [here](https://github.com/keszocze/fibRNG). 
 
 
 ## What it does: Generating (Pseudo-)Random Numbers
 
-*FibRNG* is a reconfigurable (Pseudo) Random Number Generator (RNG) that generates random bits by via a Fibonacci Linear-Feebdack Shift Registers (LFSR) (see [Wikipedia](https://en.wikipedia.org/wiki/Linear-feedback_shift_register) for a detailed description). For this, it stores two bit-vectors. The first one ($r$) stores the random bit string and the other one ($t$) stores the *taps*, i.e., the bit indices in $r$ that are using to compute the next bit. In each step, this new random bit $b$ is determined by computing
-$b=\bigoplus\limits_{i=1}^{n} r_i \wedge t_i.$
+*FibRNG* is a reconfigurable (Pseudo) Random Number Generator (RNG) that generates random bits by via a Fibonacci Linear-Feebdack Shift Registers (LFSR) (see [Wikipedia](https://en.wikipedia.org/wiki/Linear-feedback_shift_register) for a detailed description). For this, it stores two bit-vectors. The first one ($r$) stores the random bit string and the other one ($t$) stores the *taps*, i.e., the bit indices in $r$ that are using to compute the next bit. In each step, this new random bit $b$ is determined by computing 
+
+$$b=\bigoplus\limits_{i=1}^{n} r_i \wedge t_i.$$
+
 The vector $r$ is then updated by shifting in the new bit $b$ from the left, dropping the last bit to the right.
 
 **Note:** The description of this document follows [Wikipedia](https://en.wikipedia.org/wiki/Linear-feedback_shift_register). This means that the indicies into the bit-vector start with $1$ and increase from left to right, instead of starting from $0$ and increase to the left.
@@ -21,7 +25,13 @@ Figure 1 shows an Fibonaccy LFSR made from $16$ bits that uses the taps $1, 11, 
 ![A $16$-bit Fibonacci LFSR using the taps $1, 11, 13,14$ and $16$. (Taken from [Wikimedia Commons](https://commons.wikimedia.org/wiki/File:LFSR-F16.svg), Author: KCAuXy4p)](docs/LFSR-F16.svg)
 
 The current vector $r$ is given by $r=\langle 10101100\, 11100001 \rangle$. The next bit is computed as $$b=r_1 \oplus r_{11} \oplus r_{13} \oplus r_{14} \oplus r_{16} = 1 \oplus 1 \oplus 0 \oplus 0 \oplus 1 = 0$$
-and $r$ is then  updated to $$r=\langle 01010110\, 01110000 \rangle.$$ The update rule can also be written as $$r' = \left\langle \left(\bigoplus_{i=1}^n r_i \wedge t_i\right) ~ r[1:31]\right\rangle.$$
+and $r$ is then  updated to 
+
+$$r=\langle 01010110\, 01110000 \rangle.$$ 
+
+The update rule can also be written as 
+
+$$r' = \left\langle \bigoplus_{i=1}^n r_i \wedge t_i\ ~~ r[1:31]\right\rangle.$$
 
 The random number is obtained by reading the rightmost bit after each iteration.
 
@@ -31,9 +41,17 @@ Generating bit-vectors $r$ as described above is necessarily cyclic, i.e. after 
 
 When using an LFSR one usually aims of obtaining sequences of maximal length (named *Maximum Length Sequences* (MLS), see [Wikipedia](https://en.wikipedia.org/wiki/Maximum_length_sequence)) as this yields most random numbers given a specific configuration of the LFSR. 
 
-There are lists of known taps that, for a bit-vector of length $n$ will yield a MLS of length $2^n-1$. The bit-vector $r=\langle 0 \ldots 0 \rangle$ must not occur as it will only ever generate a new random bit $b$ of value $0$, i.e., the number generation is stuck. Wikipedia has a list of taps for up to $n$ bits [here](https://en.wikipedia.org/wiki/Linear-feedback_shift_register#Example_polynomials_for_maximal_LFSRs9) and a [Xilinx Application Note](http://www.xilinx.com/support/documentation/application_notes/xapp052.pdf) provides taps for up to $168$ bits 
+There are lists of known taps that, for a bit-vector of length $n$ will yield a MLS of length $2^n-1$. The bit-vector $r=\langle 0 \ldots 0 \rangle$ must not occur as it will only ever generate a new random bit $b$ of value $0$, i.e., the number generation is stuck. Wikipedia has a list of taps for up to $n$ bits [here](https://en.wikipedia.org/wiki/Linear-feedback_shift_register#Example_polynomials_for_maximal_LFSRs9) and a [Xilinx Application Note](http://www.xilinx.com/support/documentation/application_notes/xapp052.pdf) provides taps for up to $168$ bits.
 
 
+*FibRNG* is initially configured to produce a MLS for $32$ bits, i.e., the registers are set to
+
+$$
+\begin{aligned}
+r &= \langle 11111111 ~~ 11111111 ~~ 11111111 ~~ 11111111\rangle ~ \text{and}\\
+t &= \langle 11000000 ~~ 00000000 ~~ 00000100 ~~ 00000001\rangle.
+\end{aligned}
+$$
 
 
 ## How it is implemented
@@ -57,16 +75,16 @@ $$
 Reading the new random bit (i.e., $r_{32}$) is done as follows using cocotb (it should be straight-forward to translate this to a `C++` program):
 
 ```python
-    # Get the last (i.e., fourth) word
-    # (see the 'Register Map' section of the documentation for details)
-    fibReg4 = await tqv.read_reg(FIBREG4)
+# Get the last (i.e., fourth) word
+# (see the 'Register Map' section of the documentation for details)
+fibReg4 = await tqv.read_reg(FIBREG4)
 
-    # AND'ing with the lowest bit to extract the new random bit r_32
-    # (the last bit in the last word)
-    randomBit = fibReg4 & 1
+# AND'ing with the lowest bit to extract the new random bit r_32
+# (the last bit in the last word)
+randomBit = fibReg4 & 1
 ```
 
-Furhtermore, FibRNG can be in one of the following modes of operation: 
+Furthermore, FibRNG can be in one of the following modes of operation: 
 
 * `Stopped`
 * `Running`
@@ -101,22 +119,22 @@ To configure either the shift register $r$ or the taps $t$, set the operation mo
 
 
 #### Example
-As an example, we configure `FibgRNG` to be used as the RNG shown in Figure 1, i.e., $n=16$, $r=\langle 10101100 ~ 11100001 \rangle$ and $t=\langle 10000000 ~ 00101101\rangle$. The following [cocotb code]() 
+As an example, we configure `FibgRNG` to be used as the RNG shown in Figure 1, i.e., $n=16$, $r=\langle 10101100 ~ 11100001 \rangle$ and $t=\langle 10000000 ~ 00101101\rangle$.
 
 ```python
-    await tqv.write_reg(CMD_REG, CMD_STOP)
+await tqv.write_reg(CMD_REG, CMD_STOP)
 
-    await tqv.write_reg(FIBREG1, int('10101100',2))
-    await tqv.write_reg(FIBREG2, int('11100001',2))
-    # FibReg3 and FibReg4 do not need to be set to zero
+await tqv.write_reg(FIBREG1, int('10101100',2))
+await tqv.write_reg(FIBREG2, int('11100001',2))
+# FibReg3 and FibReg4 do not need to be set to zero
 
-    await tqv.write_reg(TAPS1, int('10000000',2))
-    await tqv.write_reg(TAPS2, int('00101101',2))
-    # you *need* to clear the upper tap bits!
-    await tqv.write_reg(TAPS3, 0)
-    await tqv.write_reg(TAPS4, 0)
+await tqv.write_reg(TAPS1, int('10000000',2))
+await tqv.write_reg(TAPS2, int('00101101',2))
+# you *need* to clear the upper tap bits!
+await tqv.write_reg(TAPS3, 0)
+await tqv.write_reg(TAPS4, 0)
 
-    await tqv.write_reg(CMD_REG, CMD_EXPLICIT)
+await tqv.write_reg(CMD_REG, CMD_EXPLICIT)
 ```
 
 It is important to set `TAPS3` and `TAPS4` to $\langle 0000000\rangle$ as *FibRNG* will 
@@ -126,7 +144,7 @@ these upper bits are used in the computation of $b$. Entries $r_{i}$ with $i > n
 arbitrary values as they will not be taken into account as we have $r_i \wedge t_i = r_i \wedge 0 = 0$ for 
 all $i > n$.
 
-This example can be directly transalted into a `C++` program.
+This example can be directly translated into a `C++` program.
 
 ### Register map
 
@@ -154,30 +172,36 @@ Reading from any address not specified in the table below will return the word `
 
 ## How to test
 
-The following cocotb code configures *FibRNG* to use a $3$-bit Fibonacci LFSR having the maximum length sequence of $2^3-1=7$.
+The following cocotb code configures *FibRNG* to use a $3$-bit Fibonacci LFSR having the maximum length sequence of $2^3-1=7$. This is actual code as used in the `how_to_test_example` method in the [testbench](test/test.py).
 
 ```python
+await tqv.write_reg(CMD_REG, CMD_STOP)
 
-    await tqv.write_reg(ADDR_CMD, CMD_STOP)
+await tqv.write_reg(FIBREG1, int('11100000',2))
+# FibReg2, FibReg3 and FibReg4 do not need to be set to zero
+# but we do it "to be safe" anyways
+await tqv.write_reg(FIBREG2, 0)
+await tqv.write_reg(FIBREG3, 0)
+await tqv.write_reg(FIBREG4, 0)
 
-    await tqv.write_reg(FIBREG1, int('11110000',2))
-    # FibReg2, FibReg3 and FibReg4 do not need to be set to zero
+await tqv.write_reg(TAPS1, int('01100000',2)) 
+# you *need* to clear the upper tap bits!
+await tqv.write_reg(TAPS2, 0)
+await tqv.write_reg(TAPS3, 0)
+await tqv.write_reg(TAPS3, 0)
 
-    await tqv.write_reg(TAPS1, int('01100000',2))
-    # you *need* to clear the upper tap bits!
-    await tqv.write_reg(TAPS2, 0)
-    await tqv.write_reg(TAPS3, 0)
-    await tqv.write_reg(TAPS4, 0)
+await tqv.write_reg(CMD_REG, MODE_EXPLICIT)
 
-    await tqv.write_reg(CMD_REG, CMD_EXPLICIT)
+
+for i in range(8):
+    # get current state of the RNG
+    val = await tqv.read_reg(FIBREG1)
+
+    # extract and print the upper bits
+    v = f"{val:=08b}"[0:3]
+    print(f"{i}: r=<{v}> b={v[-1]}")
 
     await tqv.write_reg(CMD_REG, CMD_ADVANCE)
-    for i in range(8):
-        await val = tqv.read_reg(FibReg1)
-
-        # extract the upper bits
-        v = f"{val:=08b}"[0:4]
-        print(f"{i:=2}: {v})
 ```
 
 ## External hardware
@@ -188,5 +212,5 @@ No external hardware is used.
 
 * ["Linear-feedback shift register"](https://en.wikipedia.org/wiki/Linear-feedback_shift_register) -- Wikipedia 
 * ["Maximum length sequence"](https://en.wikipedia.org/wiki/Maximum_length_sequence) -- Wikipedia 
+* [FibRNG Clash Repository](https://github.com/keszocze/fibRNG/)
 * P. Alfke, “Efficient Shift Registers, LFSR Counters, and Long Pseudo-Random Sequence Generators,” Xilinx, Application Note XAPP 052, July 1996. [Available online](http://www.xilinx.com/support/documentation/application_notes/xapp052.pdf)
-

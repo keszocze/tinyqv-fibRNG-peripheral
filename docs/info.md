@@ -13,7 +13,6 @@ You can also include images in this folder and reference them in the markdown. E
 
 # FibRNG 
 
-
 Author: Oliver Keszocze
 
 Peripheral index: nn
@@ -221,4 +220,5 @@ No external hardware is used.
 
 * ["Linear-feedback shift register"](https://en.wikipedia.org/wiki/Linear-feedback_shift_register) -- Wikipedia 
 * ["Maximum length sequence"](https://en.wikipedia.org/wiki/Maximum_length_sequence) -- Wikipedia 
+* [FibRNG Clash Repository](https://github.com/keszocze/fibRNG/)
 * P. Alfke, “Efficient Shift Registers, LFSR Counters, and Long Pseudo-Random Sequence Generators,” Xilinx, Application Note XAPP 052, July 1996. [Available online](http://www.xilinx.com/support/documentation/application_notes/xapp052.pdf)
