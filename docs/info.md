@@ -15,7 +15,7 @@ You can also include images in this folder and reference them in the markdown. E
 
 Author: Oliver Keszocze
 
-Peripheral index: nn
+Peripheral index: 17
 
 ## What it does: Generating (Pseudo-)Random Numbers
 

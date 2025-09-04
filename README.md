@@ -4,7 +4,7 @@
 
 [TinyQV](https://github.com/TinyTapeout/ttsky25a-tinyQV) is a Risc-V CPU designed for Tiny Tapeout. This repository hosts an entry to the [Tiny Tapeout Risc-V peripheral challenge](https://tinytapeout.com/competitions/risc-v-peripheral/).
 
-The design has been developed in [Clash](https://clash-lang.org/). This repository contains a verilog file that was generated from the Clash source and tests written in cocotb/Python. The design will then be submitted to the TinyQV [repository](https://github.com/tinytapeout/ttsky25a-tinyqv). 
+The design has been developed in [Clash](https://clash-lang.org/). This repository contains a verilog file that was generated from the Clash source and tests written in cocotb/Python. The design is be submitted to the TinyQVB [repository](https://github.com/tinytapeout/ttsky25a-tinyqvb) with ID $17$. 
 
 You can find in the repository hosting the Clash design [here](https://github.com/keszocze/fibRNG). 
 
