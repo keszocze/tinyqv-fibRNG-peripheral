@@ -17,6 +17,7 @@ Author: Oliver Keszocze
 
 Peripheral index: 17
 
+
 ## What it does: Generating (Pseudo-)Random Numbers
 
 *FibRNG* is a reconfigurable (Pseudo) Random Number Generator (RNG) that generates random bits by via a Fibonacci Linear-Feedback Shift Registers (LFSR) (see [Wikipedia](https://en.wikipedia.org/wiki/Linear-feedback_shift_register) for a detailed description). For this, it stores two bit-vectors. The first one ($r$) stores the random bit string and the other one ($t$) stores the *taps*, i.e., the bit indices in $r$ that are using to compute the next bit. In each step, this new random bit $b$ is determined by computing 
@@ -49,7 +50,7 @@ Generating bit-vectors $r$ as described above is necessarily cyclic, i.e. after 
 
 When using an LFSR one usually aims of obtaining sequences of maximal length (named *Maximum Length Sequences* (MLS), see [Wikipedia](https://en.wikipedia.org/wiki/Maximum_length_sequence)) as this yields most random numbers given a specific configuration of the LFSR. 
 
-There are lists of known taps that, for a bit-vector of length $n$ will yield a MLS of length $2^n-1$. The bit-vector $r=\langle 0 \ldots 0 \rangle$ must not occur as it will only ever generate a new random bit $b$ of value $0$, i.e., the number generation is stuck. Wikipedia has a list of taps for up to $n$ bits [here](https://en.wikipedia.org/wiki/Linear-feedback_shift_register#Example_polynomials_for_maximal_LFSRs9) and a [Xilinx Application Note](http://www.xilinx.com/support/documentation/application_notes/xapp052.pdf) provides taps for up to $168$ bits.
+There are lists of known taps that, for a bit-vector of length $n$ will yield a MLS of length $2^n-1$. The bit-vector $r=\langle 0 \ldots 0 \rangle$ must not occur as it will only ever generate a new random bit $b$ of value $0$, i.e., the number generation is stuck. Wikipedia has a list of taps for up to $24$ bits [here](https://en.wikipedia.org/wiki/Linear-feedback_shift_register#Example_polynomials_for_maximal_LFSRs) and a [Xilinx Application Note](http://www.xilinx.com/support/documentation/application_notes/xapp052.pdf) provides taps for up to $168$ bits.
 
 
 *FibRNG* is initially configured to produce a MLS for $32$ bits, i.e., the registers are set to
